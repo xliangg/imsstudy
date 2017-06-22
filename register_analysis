@@ -58,8 +58,10 @@ SIP URI
 +g.3gpp.accesstype="cellular2";audio
 
 [ LINE 10 ]Supported: path, gruu, sec-agree
-
+ enumerates all the extensions supported (See "20.37 Supported" of  RFC 3261).
+ 
 [ LINE 11 ]Allow:
+列出UE允许的所有方法. (See "20.5 Allow" of  RFC 3261).
 
 [ LINE 12 ]Authorization: 
 鉴权信息
