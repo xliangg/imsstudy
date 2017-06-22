@@ -1,0 +1,85 @@
+REGISTER 消息分析
+
+[LINE 1 ]REGISTER sip:ims.mnc007.mcc460.3gppnetwork.org SIP/2.0
+[LINE 2 ]Via: SIP/2.0/TCP [2409:8809:88b0:8dee:13ca:561c:2a39:1f90];branch=z9hG4bKcG3jSXoULTJOTa
+[LINE 3 ]From: <sip:460079146551815@ims.mnc007.mcc460.3gppnetwork.org>;tag=Ycko0XpJMeEC1s
+[LINE 4 ]To: <sip:460079146551815@ims.mnc007.mcc460.3gppnetwork.org>
+[LINE 5 ]Call-ID: 2FCRRO46GcrqUwRLLnn@[2409:8809:88b0:8dee:13ca:561c:2a39:1f90]
+[LINE 6 ]Max-Forwards: 70
+[LINE 7 ]Expires: 600000
+[LINE 8 ]User-Agent: VoLTE/WFC UA
+[LINE 9 ]Contact: <sip:[2409:8809:88b0:8dee:13ca:561c:2a39:1f90]:5060>;+sip.instance="<urn:gsma:imei:86404403-006490-0>";+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.smsip;+g.3gpp.accesstype="cellular2";audio
+[LINE 10]Supported: path, gruu, sec-agree
+[LINE 11]Allow: INVITE, ACK, CANCEL, BYE, UPDATE, REFER, NOTIFY, MESSAGE, PRACK, OPTIONS
+[LINE 12]Authorization: Digest username="460079146551815@ims.mnc007.mcc460.3gppnetwork.org",realm="ims.mnc007.mcc460.3gppnetwork.org",nonce="",uri="sip:ims.mnc007.mcc460.3gppnetwork.org",response=""
+[LINE 13]Require: sec-agree
+[LINE 14]Proxy-Require: sec-agree
+[LINE 15]Security-Client: ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=null;alg=hmac-md5-96, ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=null;alg=hmac-sha-1-96, ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=des-ede3-cbc;alg=hmac-md5-96, ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=des-ede3-cbc;alg=hmac-sha-1-96, ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=aes-cbc;alg=hmac-md5-96, ipsec-3gpp;prot=esp;mod=trans;spi-c=881286446;spi-s=827758150;port-c=50000;port-s=50001;ealg=aes-cbc;alg=hmac-sha-1-96
+[LINE 16]CSeq: 1 REGISTER
+[LINE 17]P-Access-Network-Info: 3GPP-E-UTRAN-TDD;utran-cell-id-3gpp=460002694A553401
+[LINE 18]Content-Length: 0
+
+
+[ Line 1 ] 请求行. 格式 : Method SP Request-URI SP SIP-Version
+Method : REGISTER
+SP : Single Space
+Request-URI : sip:ims.sharetechnote.com
+SP : Single Space
+SIP-Version : SIP/2.0
+Note : 最重要的部分是Request-URI. 
+UE specifies the domain name of the IMS Server (P-CSCF) in this field. UE get the domain name mostlyfrom USIM/ISIM or depending on UE implementation, it may get it from UE's internal setting.
+ 
+[ LINE  2 ] Via:
+本地地址 (2409:8809:88b0:8dee:13ca:561c:2a39:1f90) 所有响应发送到这个地址
+
+[ LINE 3 ] From:
+ SIP or SIPS URI  "460079146551815@ims.mnc007.mcc460.3gppnetwork.org". branch=z9hG4bKcG3jSXoULTJOTa伪随机数
+ 
+[ LINE 4 ]To: <sip:460079146551815@ims.mnc007.mcc460.3gppnetwork.org>
+
+[ LINE 5 ] Call-ID:2FCRRO46GcrqUwRLLnn@[2409:8809:88b0:8dee:13ca:561c:2a39:1f90]
+全局伪随机数+ip地址 第一个dialog使用Call-ID, From, To来区分
+
+[ LINE 6 ] Max-Forwards :
+最大路由数，超过最大路由，包会被丢弃
+
+[ LINE  7 ] Expires : 600000
+超时时间，单位秒，超时时间内不重新注册，注册状态会被取消 (See "20.19 Expires" of RFC 3261). 
+
+[ LINE 8 ]User-Agent: VoLTE/WFC UA
+名称
+
+[ LINE 9 ]Contact:
+SIP URI
++开头，UE capability
++sip.instance="<urn:gsma:imei:86404403-006490-0>";  //IMEI URN (see 3GPP TS 23.003 section 13.8)
++g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";  //IMS Communication Service Identifier (ICSI) 3GPP TS 24.173
++g.3gpp.smsip; // sms 5.3.2.2 of 3GPP TS 24.341
++g.3gpp.accesstype="cellular2";audio
+
+[ LINE 10 ]Supported: path, gruu, sec-agree
+
+[ LINE 11 ]Allow:
+
+[ LINE 12 ]Authorization: 
+鉴权信息
+
+[ LINE 13 ]Require: sec-agree
+[ LINE 14 ]Proxy-Require: sec-agree
+[ LINE 15 ]Security-Client:
+需要IPSEC
+
+[ LINE 16 ]CSeq: 1 REGISTER
+数字和方法
+一个新的transaction自动生成一个数字，后续的自动加1，用来判断是否有消息漏掉及乱序
+
+[ LINE 17 ]P-Access-Network-Info: 3GPP-E-UTRAN-TDD;utran-cell-id-3gpp=460002694A553401
+接入网络类型
+
+[ LINE 18 ]Content-Length: 0
+内容长度（一般指sdp）
+
+
+去注册
+Expires: 0
+
