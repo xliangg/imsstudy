@@ -1,0 +1,271 @@
+1. Request Message
+REGISTER  A Client use this message to register an address with a SIP server  RFC3261
+INVITE    A User or Service use this message to let another user/service participate in a session. The body of this message would include
+a description of the session to which the callee is being invited.  RFC3261
+ACK       This is used only for INVITE indicating that the client has received a final response to an INVITE request  RFC3261
+CANCEL    This is used to cancel a pending request  RFC3261
+BYE       A User Agent Client use this message to terminate the call  RFC3261
+OPTIONS   This is used to query a server about its capabilities  RFC3261
+INFO      This is used for mid session signaling  RFC3261
+
+MESSAGE   Usually used to send Standalone Message (like SMS). RFC 3428
+SUBSCRIBE	used to request asynchronous notification of an event or set of events at a later time. RFC 6665
+NOTIFY    used to notify a SIP node that an event that has been requested by an earlier SUBSCRIBE method has occurred. RFC 6665
+UPDATE    used for a client to update parameters of a session (such as the set of media streams and their codecs). RFC 3311
+PRACK     plays the same role as ACK, but this is used for provisional responses. RFC 3262
+PUBLISH   used for publication of presence information. RFC 3093
+
+2. Response Message
+1xx	Provisional		The request has been received and processing is continuing  RFC3261
+2xx	Success			An ACK, to indicate that the action was successfully received, understood, and accepted.  RFC3261
+3xx	Redirection		Further action is required to process this request  RFC3261
+4xx	Client Error	The request contains bad syntax and cannot be fulfilled at this server  RFC3261
+5xx	Server Error	The server failed to fulfill an apparently valid request  RFC3261
+6xx	Global Failure	The request cannot be fulfilled at any server  RFC3261
+
+
+1xx:
+
+100 Trying		This response indicates that the request has been received by the next-hop server and that some unspecified action is being
+taken on behalf of this call (for example, a database is being consulted).This response, like all other provisional responses, stops 
+retransmissions of an INVITE by a UAC.  The 100 (Trying) response is different from other provisional responses, in that it is never 
+forwarded upstream by a stateful proxy.
+
+Ref : RFC 3261 21.1.1 100 Trying
+ 
+180 Ringing		The UA receiving the INVITE is trying to alert the user.  This response MAY be used to initiate local ringback
+
+Ref : RFC 3261 21.1.2 180 Ringing
+
+181 Call Is Being Forwarded		A server MAY use this status code to indicate that the call is being forwarded to a different set of 
+destinations
+
+Ref : RFC 3261 21.1.3 181 Call Is Being Forwarded
+
+182 Queued		The called party is temporarily unavailable, but the server has decided to queue the call rather than reject it.  When 
+the callee becomes available, it will return the appropriate final status response. The reason phrase MAY give further details about 
+the status of the call, for example, "5 calls queued; expected waiting time is 15 minutes".  The server MAY issue several 182 (Queued) 
+responses to update the caller about the status of the queued call.
+
+Ref : RFC 3261 1.1.4 182 Queued
+
+183 Session Progress			This response is used to convey information about the progress of the call that is not otherwise classified.  
+The Reason-Phrase, header fields, or message body MAY be used to convey more details about the call progress.
+
+Ref : RFC 3261 21.1.5 183 Session Progress
+
+2xx:
+
+200 OK			The request has succeeded.  The information returned with the response depends on the method used in the request
+
+Ref : RFC 3261 21.2.1 200 OK
+
+3xx:
+300 Multiple Choices			The address in the request resolved to several choices, each with its own specific location, and the user (or 
+UA) can select a preferred communication end point and redirect its request to that location.
+ 
+The response MAY include a message body containing a list of resource characteristics and location(s) from which the user or UA can 
+choose the one most appropriate, if allowed by the Accept request header field.  However, no MIME types have been defined for this 
+message body.
+Ref : RFC 3261 21.3.1 300 Multiple Choices
+
+ 
+301 Moved Permanently			The user can no longer be found at the address in the Request-URI, and the requesting client SHOULD retry at 
+the new address given by the Contact header field.  The requestor SHOULD update any local directories, address books, and user location 
+caches with this new value and redirect future requests to the address(es) listed.
+
+Ref : RFC 3261 21.3.2 301 Moved Permanently
+
+ 
+302 Moved Temporarily			The requesting client SHOULD retry the request at the new address(es) given by the Contact header field 
+(Section 20.10).  The Request-URI of the new request uses the value of the Contact header field in the response
+
+Ref : RFC 3261 21.3.3 302 Moved Temporarily
+
+ 
+305 Use Proxy					The requested resource MUST be accessed through the proxy given by the Contact field.  The Contact field gives 
+the URI of the proxy.The recipient is expected to repeat this single request via the proxy.  305 (Use Proxy) responses MUST only be 
+generate by UASs
+
+Ref : RFC 3261 21.3.4 305 Use Proxy
+
+Refer to 24.229 - 5.1.1.2 Initial registration - 5.1.1.2.1 General in terms of specific procedure on receiving this message
+
+ 
+380 Alternative Service			The call was not successful, but alternative services are possible. The alternative services are described 
+in the message body of the response.  Formats for such bodies are not defined here, and may be the subject of future standardization
+
+Ref : RFC 3261 21.3.5 380 Alternative Service
+
+4xx:
+400 Bad Request					The request could not be understood due to malformed syntax.  The Reason-Phrase SHOULD identify the syntax 
+problem in more detail, for example, "Missing Call-ID header field".
+
+Ref : RFC 3261 21.4.1 400 Bad Request
+
+ 
+401 Unauthorized				This indicate that Registra wants to go through Authentication Process
+(see Registration with Authentication for details)
+ 
+402	Payment Required 
+ 
+403 Forbidden				This indicate that a forbidden request has arrived.
+For example, REGISTER message with wrong parameters has arrived. (e.g, the ueid or domain name or realm domain is not the one that 
+CSCF is expecting. In this case, CSCF send 403 right after it got REGISTER message).
+ 
+P-CSCF check if the private user identity conveyed in the Authorization header field of the protected REGISTER request is the same as 
+the private user identity which was previously challenged or authenticated. If the private user identities are different, the P-CSCF 
+shall reject the REGISTER request by returning a 403 response.(TS 24.229)
+ 
+If the P-CSCF detect that the Request-URI of the initial request for a dialog, or a standalone transaction, or an unknown method does 
+not match any one of the emergency service identifiers in the associated lists, the P-CSCF shall reject the request by returning a 403 
+to UE (TS 24.229)
+When the I-CSCF recieves a REGISTER request, the I-CSCF shall verify whether or not it has arrived from a trusted domain. If the request 
+has not arrived from a trusted domain, the I-CSCF shall complete the processing of the request by responding with 403(TS 24.229)
+
+ 
+404 Not Found				The server has definitive information that the user does not exist at the domain specified in the Request-URI.  This 
+status is also returned if the domain in the Request-URI does not match any of the domains handled by the recipient of the request.
+
+Ref : RFC 3261 21.4.5 404 Not Found
+
+ 
+405 Method Not Allowed		The method specified in the Request-Line is understood, but not allowed for the address identified by the 
+Request-URI. The response MUST include an Allow header field containing a list of valid methods for the indicated address.
+
+Ref : RFC 3261 21.4.6 405 Method Not Allowed
+
+ 
+406 Not Acceptable			The resource identified by the request is only capable of generating response entities that have content 
+characteristics not acceptable according to the Accept header field sent in the request.
+
+Ref : RFC 3261 21.4.7 406 Not Acceptable
+
+ 
+407 Proxy Authentication Required
+ 
+ 
+408 Request Timeout			The server could not produce a response within a suitable amount of time, for example, if it could not determine 
+the location of the user in time.  The client MAY repeat the request without modifications at any later time.
+
+Ref : RFC 3261 21.4.9 408 Request Timeout
+
+Refer to 24.229 - 5.1.1.2 Initial registration - 5.1.1.2.1 General in terms of specific procedure on receiving this message
+
+ 
+410 Gone
+ 
+ 
+413 Request Entity Too Large
+ 
+ 
+414 Request-URI Too Long
+ 
+ 
+415 Unsupported Media Type
+ 
+ 
+416 Unsupported URI Scheme
+ 
+ 
+420 Bad Extension
+ 
+ 
+421 Extension Required
+ 
+ 
+423 Interval Too Brief		This error indicates that the same messages was received multiple times with two short interval. (E.g, An UA 
+send SIP:REGISTER message twice with very short interval and the Registra would send 423)
+The server is rejecting the request because the expiration time of the resource refreshed by the request is too short.  This response 
+can be used by a registrar to reject a registration whose Contact header field expiration time was too small.
+
+You may reduce the chance of this error by tweaking Min-Expires header
+
+Ref : RFC 3261 21.4.17 423 Interval Too Brief
+
+Refer to 24.229 - 5.1.1.2 Initial registration - 5.1.1.2.1 General in terms of specific procedure on receiving this message
+
+ 
+480 Temporarily Unavailable
+ 
+ 
+481 Call/Transaction Does Not Exist
+ 
+ 
+482 Loop Detected
+ 
+ 
+483 Too Many Hops
+ 
+ 
+484 Address Incomplete
+ 
+ 
+485 Ambiguous
+ 
+ 
+486 Busy Here
+ 
+ 
+487 Request Terminated
+ 
+ 
+488 Not Acceptable Here		SDP offer conveyed in a SIP response contained parameters which are not allowed according to the local policy
+(TS 24.229)
+
+ 
+491 Request Pending
+ 
+ 
+493 Undecipherable
+ 
+5xx:
+500 Server Internal Error	The server encountered an unexpected condition that prevented it from fulfilling the request.  The client MAY 
+display the specific error condition and MAY retry the request after several seconds. If the condition is temporary, the server MAY 
+indicate when the client may retry the request using the Retry-After header field.
+
+If Retry-After is set to be specific value, UE should retry after the specified time and if Retry-After is not set, UE is expected to 
+retry in around 30 sec at the first retry and with extended back-off time.
+
+Ref : RFC 3261 21.5.1 500 Server Internal Error
+
+ 
+501 Not Implemented
+ 
+ 
+502 Bad Gateway
+ 
+ 
+503 Service Unavailable
+radio/bearer inferface resources are no longer available (TS 24.229)
+the signaling bearer is no longer available (TS 24.229)
+ 
+UE is requesting some service which cannot be supported.
+ 
+When this happens, UE normally retry the request.
+If Retry-After is set to be specific value, UE should retry after the specified time and if Retry-After is not set, UE is expected to 
+retry in around 30 sec at the first retry and with extended back-off time.
+
+ 
+504 Server Time-out		Refer to 24.229 - 5.1.1.2 Initial registration - 5.1.1.2.1 General in terms of specific procedure on receiving 
+this message
+
+ 
+505 Version Not Supported
+ 
+ 
+513 Message Too Large
+ 
+6xx:
+600 Busy Everywhere		Refer to 24.229 - 5.1.1.2 Initial registration - 5.1.1.2.1 General in terms of specific procedure on receiving 
+this message
+
+ 
+603 Decline
+ 
+ 
+604 Does Not Exist Anywhere
+ 
+ 
+606 Not Acceptable
+ 
