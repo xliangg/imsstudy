@@ -1,0 +1,114 @@
+https://www.processon.com/diagraming/594b8867e4b0230023bb6c44
+
+The 'definition (information)' is specified in several properties in SDP as follows in RFC 3312.
+ 
+      current-status     =  "a=curr:" precondition-type
+                            SP status-type SP direction-tag
+      desired-status     =  "a=des:" precondition-type
+                            SP strength-tag SP status-type
+                            SP direction-tag
+      confirm-status     =  "a=conf:" precondition-type
+                            SP status-type SP direction-tag
+      precondition-type  =  "qos" | token
+      strength-tag       =  ("mandatory" | "optional" | "none"
+                         =  | "failure" | "unknown")
+      status-type        =  ("e2e" | "local" | "remote")
+      direction-tag      =  ("none" | "send" | "recv" | "sendrecv")
+      
+(1) INVITE
+ 
+A UE (UA) send INVITE to initiate a session for a specific services. At this step, UE send SDP offer and usually this SDP carries 
+information about media
+ 
+Note : In some application, especially in LTE, the other party (called party) send 100 Trying after the INVITE. But it doesn't seem to 
+be mandatory according to RFC.
+ 
+(2) 183 Session Progress.
+ 
+The other party (Called Party) is sending 183 Session Progress. It basically saying "I received your INVITE message and am doing 
+something to make this work". In theory, this is just a simple provisioning message for information purpose, but depending on the 
+parameters carried by this message this can be a very crucial message.
+ 
+One example is when this message carries following header. This means 'this session requires Precondition.' and 'this message requires 
+100 rel'. What is 100 rel required ? It means 'Since this message would carry very important contents, I want to get conformation (PRACK)
+from the other party'. Usually Provisoning message like 183 does not require any response from the other party, but if it carries header
+'Require: 100rel', the other party should send specific confirmation message called PRACK.
+Usually when a provisioning message carries very important contents like SDP, it adds 'Require: 100rel' to make it sure that the other 
+party successfully received the message.
+Require: precondition
+Require: 100rel
+Since this message set 'Precondition = Required', it start exchanging the required qos parameters as shown below. 'des (desired):qos' 
+defines the final qos condition for this session, 'curr(current):qos' means the qos condition that we currently achieved. In this 
+setting, both 'curr:qos local' and 'curr:qos remote' is set to be 'none' since we are at the stage where no resource is allocated in 
+either local nor remote side.
+a=curr:qos local none
+a=curr:qos remote none
+a=des:qos mandatory local sendrecv
+a=des:qos mandatory remote sendrecv
+ 
+(3) PRACK
+ 
+This is a kind of confirmation message for 183 Session Progress. This means "I received 183 Session Progress message that you sent".  In
+some cases, PRACK can carry SDP in it. Depending on whether PRACH carry SDP or not, or Depending on the detailed qos setting in the SDP, there can be some variations on UPDATE process. Refer to Requirement for SDP Negotiation section for details.
+ 
+(4) 200 OK
+ 
+This is just response for PRACK. This can be very simple 200OK, or it can be more complicated message carrying SDP in it.
+ 
+(5) UPDATE
+ 
+UPDATE message is sent from the Calling party to the called party. Main purpose of this message is "OK, now I am ready to establish the 
+session at least on my side. This and this kind of media can be setup. This and this kind of qos (resource allocation) is confirmed". I 
+means the calling party send out this message only when the required resource/condition is guaranteed.
+ 
+One example of the required condition in LTE case would be the completion of Dedicated EPS Bearer Setup. It implies 'UPDATE would be 
+sent out after Dedicated EPS Bearer Setup'. (At the early stage of IMS implementation, I saw most of UE does not care about this 
+condition, but in more recent UEs (as of late 2014) I saw most of UE mandate 'Dedicated EPS Bearer' as a precondition for UPDATE. If you
+have problem with missing 'UPDATE' message when you were expecting it, first check if 'Dedicated EPS Bearer' is established and then 
+check as described in Requirement for SDP Negotiation
+ 
+One example of qos setting in the SDP in UPDATE message is as follows. In this example, you would see 'qos for local satisfies the 
+requirement' now because "curr:qos local sendrecv >= des:qos mandatory local sendrecv" (see How to evaluate the condition ? for the 
+details)
+a=curr:qos local sendrecv
+a=curr:qos remote none
+a=des:qos mandatory local sendrecv
+a=des:qos mandatory remote sendrecv
+ 
+(6) 200 OK
+ 
+This is response(confirmation) to UPDATE. Also, another important functionality of this message is to carry the SDP with qos parameter. 
+One example of qos parameter in this SDP is as follows. you would see 'qos for both local and remote satisfies the requirement and ' now
+because "curr:qos local sendrecv >= des:qos mandatory local sendrecv and curr:qos remote sendrecv >= des:qos mandatory remote sendrecv" 
+(see How to evaluate the condition ? for the details)
+a=curr:qos local sendrecv
+a=curr:qos remote sendrecv
+a=des:qos mandatory local sendrecv
+a=des:qos mandatory remote sendrecv
+Once you see this state of qos setting, it means both local and remote side are all ready to establish a communication.
+ 
+(7) 180 Ringing
+ 
+At this step, both called party and calling party would hear rining sound. Since this is an important step, it would carry the following
+header.
+Require: 100rel
+This means PRACK is required at next step.
+ 
+(8) PRACK
+ 
+This is the response (confirmation) for 180 Rining with 100 rel.
+ 
+(9) 200 OK
+ 
+This is the response (confirmation) for PRACK
+ 
+(10) 200 OK
+ 
+This is the response (confirmation) for INVITE
+ 
+(11) ACK
+ 
+This is the response (confirmation) for 200 OK (INVITE)
+ 
+
+
