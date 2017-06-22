@@ -1,0 +1,133 @@
+[ Line 1 ] INVITE tel:10086;phone-context=ims.mnc002.mcc460.3gppnetwork.org SIP/2.0
+[ Line 2 ] Via: SIP/2.0/TCP [2409:8809:88c0:d24e:43e4:900e:9795:459e]:50001;branch=z9hG4bK6hgj9XCbefR3qm
+[ Line 3 ] From: <sip:+8615820587860@gd.ims.mnc000.mcc460.3gppnetwork.org>;tag=D4cUrF8ApmLPSZ
+[ Line 4 ] P-Preferred-Identity: <sip:+8615820587860@gd.ims.mnc000.mcc460.3gppnetwork.org>
+[ Line 5 ] Contact: <sip:+8615820587860@[2409:8809:88c0:d24e:43e4:900e:9795:459e]:50001>;+sip.instance="<urn:gsma:imei:86404403-006490-0>";+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel";+g.3gpp.mid-call;+g.3gpp.srvcc-alerting;+g.3gpp.ps2cs-srvcc-orig-pre-alerting
+[ Line 6 ] To: <tel:10086;phone-context=ims.mnc002.mcc460.3gppnetwork.org>
+[ Line 7 ] Allow: INVITE, ACK, CANCEL, BYE, UPDATE, REFER, NOTIFY, MESSAGE, PRACK, OPTIONS
+[ Line 8 ] Supported: 100rel, precondition, replaces, timer
+[ Line 9 ] Max-Forwards: 70
+[ Line 10] Accept: application/sdp, application/3gpp-ims+xml
+[ Line 11] User-Agent: VoLTE/WFC UA
+[ Line 12] P-Preferred-Service: urn:urn-7:3gpp-service.ims.icsi.mmtel
+[ Line 13] Accept-Contact: *;+g.3gpp.icsi-ref="urn%3Aurn-7%3A3gpp-service.ims.icsi.mmtel"
+[ Line 14] P-Early-Media: supported
+[ Line 15] CSeq: 1 INVITE
+[ Line 16] Call-ID: 76a7ykaSXT9IKz83Z9w@[2409:8809:88c0:d24e:43e4:900e:9795:459e]
+[ Line 17] Session-Expires: 60000
+[ Line 18] Min-SE: 1800
+[ Line 19] Route: <sip:[2409:8019:8830:3700:0:0:0:8]:9900;lr>, <sip:orig@gzscscf4bhw.gd.chinamobile.com;lr;Dpt=7cf4_33544246;ca=c1d2;TRC=ffffffff-ffffffff>
+[ Line 20] Content-Type: application/sdp
+[ Line 21] P-Access-Network-Info: 3GPP-E-UTRAN-TDD;utran-cell-id-3gpp=460002694A520203
+[ Line 22] Require: sec-agree
+[ Line 23] Proxy-Require: sec-agree
+[ Line 24] Content-Length: 673
+[ Line 25] Security-Verify: ipsec-3gpp;alg=hmac-md5-96;prot=esp;mod=trans;ealg=null;spi-c=2721444278;spi-s=3769379163;port-c=9950;port-s=9900
+[ Line 26] 
+[ Line 27] v=0
+[ Line 28] o=- 3 3 IN IP6 2409:8809:88c0:d24e:43e4:900e:9795:459e
+[ Line 29] s=mtk voice call
+[ Line 30] c=IN IP6 2409:8809:88c0:d24e:43e4:900e:9795:459e
+[ Line 31] b=AS:49
+[ Line 32] b=RS:612
+[ Line 33] b=RR:1837
+[ Line 34] t=0 0
+[ Line 35] m=audio 40000 RTP/AVP 98 97 100 105
+[ Line 36] b=AS:49
+[ Line 37] b=RS:612
+[ Line 38] b=RR:1837
+[ Line 39] a=rtpmap:98 AMR-WB/16000/1
+[ Line 40] a=ptime:20
+[ Line 41] a=maxptime:240
+[ Line 42] a=rtpmap:97 AMR/8000/1
+[ Line 43] a=rtpmap:100 telephone-event/8000/1
+[ Line 44] a=rtpmap:105 telephone-event/16000/1
+[ Line 45] a=fmtp:98 mode-change-capability=2;octet-align=0;max-red=0
+[ Line 46] a=fmtp:97 mode-change-capability=2;octet-align=0;max-red=0
+[ Line 47] a=fmtp:100 0-15
+[ Line 48] a=fmtp:105 0-15
+[ Line 49] a=curr:qos local none
+[ Line 50] a=curr:qos remote none
+[ Line 51] a=des:qos mandatory local sendrecv
+[ Line 52] a=des:qos optional remote sendrecv
+[ Line 53] a=sendrecv
+[ Line 54] 
+
+
+header部分请参考 register_analysis
+[ Line 1 ] INVITE tel:10086;phone-context=ims.mnc002.mcc460.3gppnetwork.org SIP/2.0
+Called Number : 10086
+Destination or Router: phone-context=ims.mnc002.mcc460.3gppnetwork.org
+SIP version : 2.0
+
+[ Line 27] v=0
+version
+
+[ Line 28] o=- 3 3 IN IP6 2409:8809:88c0:d24e:43e4:900e:9795:459e
+o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
+origin of the media
+
+[ Line 29] s=mtk voice call
+session name
+
+[ Line 30] c=IN IP6 2409:8809:88c0:d24e:43e4:900e:9795:459e
+connection information
+
+[ Line 31] b=AS:49
+audio bitrate
+[ Line 32] b=RS:612
+[ Line 33] b=RR:1837
+· 如果b=RS和b=RR参数存在，那么UL和DL的RTCP带宽 = (bRS + bRR)/1000。
+
+· 如果没有b=RS或者b=RR参数，那么UL和DL的RTCP带宽 = MAX[0.05*bAS, bRS/1000或者bRR/1000]。
+
+· 如果b=RS或者b=RR都不存在，那么UL和DL的RTCP带宽 = 0.05*bAS。
+
+[ Line 34] t=0 0
+start end time
+[ Line 35] m=audio 40000 RTP/AVP 98 97 100 105
+m line, audio/video port  protocol payload
+[ Line 36] b=AS:49
+[ Line 37] b=RS:612
+[ Line 38] b=RR:1837
+
+[ Line 39] a=rtpmap:98 AMR-WB/16000/1
+[ Line 40] a=ptime:20
+[ Line 41] a=maxptime:240
+payload 98 define
+
+[ Line 42] a=rtpmap:97 AMR/8000/1
+payload 97 define
+
+[ Line 43] a=rtpmap:100 telephone-event/8000/1
+[ Line 44] a=rtpmap:105 telephone-event/16000/1
+payload 100 105 telephone-event DTMF
+
+[ Line 45] a=fmtp:98 mode-change-capability=2;octet-align=0;max-red=0
+payload 98 attr
+
+[ Line 46] a=fmtp:97 mode-change-capability=2;octet-align=0;max-red=0
+payload 97 attr
+
+[ Line 47] a=fmtp:100 0-15
+[ Line 48] a=fmtp:105 0-15
+
+[ Line 49] a=curr:qos local none
+[ Line 50] a=curr:qos remote none
+[ Line 51] a=des:qos mandatory local sendrecv
+[ Line 52] a=des:qos optional remote sendrecv
+qos for precondition
+
+[ Line 53] a=sendrecv
+send and receive
+
+
+
+
+
+
+
+
+
+
+
